@@ -34,7 +34,7 @@ class ApplicationTest {
         assertEquals(HttpStatusCode.OK, response.status)
         val result = json.decodeFromString<BenfordResult>(response.bodyAsText())
 
-        assertEquals(30.1, result.expectedDistribution[1]!!, absoluteTolerance = 0.1)
+        assertEquals(30, result.expectedDistribution[1]!!)
         assertTrue(result.observedDistribution.isNotEmpty())
         assertTrue(result.expectedDistribution.isNotEmpty())
         assertNotNull(result.chiSquareStatistic)

@@ -2,26 +2,26 @@ package com.example.features.accounting.domain
 
 import com.example.exceptions.InvalidInputException
 import com.example.features.accounting.model.BenfordResult
-import io.ktor.server.application.*
 import org.apache.commons.math3.distribution.ChiSquaredDistribution
-import java.util.logging.Logger
+import java.math.BigDecimal
+import java.math.RoundingMode
 
-class AccountingServiceImpl: AccountingService {
+class AccountingServiceImpl : AccountingService {
     override fun analyzeAccountingDataByBenfordsLaw(accountsData: String, significanceLevel: Double): BenfordResult {
-        if(accountsData.isEmpty()) {
+        if (accountsData.isEmpty()) {
             throw InvalidInputException("Accounting data cannot be empty")
         }
         val digitsCounter = IntArray(9)
 
         // 1. Parse and count leading digits
-        val total = parseAndCountLeadingDigits(accountsData, digitsCounter)
+        val totalDigitCount = parseAndCountLeadingDigits(accountsData, digitsCounter)
 
         // 2. Calculate distributions
-        val observedDistribution = calculateObservedDistribution(digitsCounter, total)
+        val observedDistribution = calculateObservedDistribution(digitsCounter, totalDigitCount)
         val expectedDistribution = calculateExpectedDistribution()
 
         // 3. Chi-square Statistics
-        val chiSquare = calculateChiSquareStatistic(digitsCounter, total)
+        val chiSquare = calculateChiSquareStatistic(digitsCounter, totalDigitCount)
         val criticalValue = calculateCriticalValue(significanceLevel)
 
         return BenfordResult(
@@ -37,7 +37,7 @@ class AccountingServiceImpl: AccountingService {
         val degreesOfFreedom = 8
         val criticalValue = ChiSquaredDistribution(degreesOfFreedom.toDouble())
             .inverseCumulativeProbability(1 - significanceLevel)
-        return criticalValue
+        return BigDecimal(criticalValue).setScale(2, RoundingMode.HALF_UP).toDouble()
     }
 
     /* Calculates the chi-square statistic for Benford's Law compliance testing.
@@ -52,22 +52,23 @@ class AccountingServiceImpl: AccountingService {
             val expected = Math.log10(1.0 + 1.0 / digit) * total
             Math.pow(observed - expected, 2.0) / expected
         }
-        return chiSquare
+        return BigDecimal(chiSquare).setScale(2, RoundingMode.HALF_UP).toDouble()
     }
 
-    private fun calculateExpectedDistribution(): Map<Int, Double> {
+    private fun calculateExpectedDistribution(): Map<Int, Int> {
         val expectedDistribution = (1..9).associateWith { digit ->
-            Math.log10(1.0 + 1.0 / digit) * 100 // Convert to percentage
+            val distribution = Math.log10(1.0 + 1.0 / digit) * 100 // Convert to percentage
+            distribution.toInt()
         }
         return expectedDistribution
     }
 
     private fun calculateObservedDistribution(
         digitsCounter: IntArray,
-        total: Double
-    ): Map<Int, Double> {
+        totalDigitCount: Double
+    ): Map<Int, Int> {
         val observedDistribution = digitsCounter.mapIndexed { index, count ->
-            index + 1 to (count * 100.0 / total)
+            index + 1 to ((count * 100.0 / totalDigitCount)).toInt()
         }.toMap()
         return observedDistribution
     }

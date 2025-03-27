@@ -16,7 +16,7 @@ class AccountingServiceImplTest {
         val data = "a:123; b:456; c:789; d:112; e:105; f:200; g:305; h:412"
         val result = service.analyzeAccountingDataByBenfordsLaw(data, 0.05)
         assertTrue(result.isBenfordCompliant)
-        assertEquals(30.1, result.expectedDistribution[1]!!, 0.1)
+        assertEquals(30, result.expectedDistribution[1]!!)
         assertTrue(result.chiSquareStatistic < result.criticalValue)
     }
 
