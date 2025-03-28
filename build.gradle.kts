@@ -1,3 +1,6 @@
+val koinVersion = "4.0.0"
+val math3Version = "3.6.1"
+
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktor)
@@ -26,9 +29,11 @@ dependencies {
     implementation(libs.ktor.server.netty)
     implementation(libs.logback.classic)
     implementation(libs.ktor.server.config.yaml)
-    implementation("org.apache.commons:commons-math3:3.6.1")
+    implementation("org.apache.commons:commons-math3:$math3Version")
+    implementation("io.insert-koin:koin-core:$koinVersion")
 
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
+    testImplementation("io.insert-koin:koin-test-junit5:$koinVersion")
 
 }
