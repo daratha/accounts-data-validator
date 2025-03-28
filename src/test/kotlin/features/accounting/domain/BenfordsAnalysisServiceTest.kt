@@ -1,7 +1,7 @@
 package features.accounting.domain
 
 import com.example.exceptions.InvalidInputException
-import com.example.features.accounting.service.BenfordsAnalysisService
+import com.example.service.BenfordsAnalysisService
 import io.ktor.http.*
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue

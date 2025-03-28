@@ -1,7 +1,7 @@
-package com.example.features.accounting.service
+package com.example.service
 
 import com.example.exceptions.InvalidInputException
-import com.example.features.accounting.model.BenfordResult
+import com.example.model.BenfordResult
 import org.apache.commons.math3.distribution.ChiSquaredDistribution
 import java.math.BigDecimal
 import java.math.RoundingMode
