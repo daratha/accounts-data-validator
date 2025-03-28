@@ -1,4 +1,4 @@
-package com.example.features.accounting.model
+package com.example.model
 
 import kotlinx.serialization.Serializable
 

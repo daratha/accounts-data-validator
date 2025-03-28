@@ -1,8 +1,9 @@
 package com.example
 
-import com.example.features.accounting.model.BenfordResult
+import com.example.model.BenfordResult
 import com.example.util.Constants.BASE_PATH_
 import com.example.util.Constants.BENFORDS_ANALYSIS_PATH
+import com.example.util.Constants.V1_PATH_
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
@@ -28,7 +29,7 @@ class ApplicationTest {
                 "fee_bank:415.20; exp_office:567.89; adjustment_01:523.45; exp_travel:632.00; misc_01:678.10; " +
                 "payment_02:721.15; refund_02:875.50; insurance:912.00"
 
-        val response = client.post("$BASE_PATH_$BENFORDS_ANALYSIS_PATH") {
+        val response = client.post("$BASE_PATH_$V1_PATH_$BENFORDS_ANALYSIS_PATH") {
             contentType(ContentType.Application.Json)
             setBody("""{"data": "$testData", "significanceLevel": 0.05}""")
         }
@@ -53,7 +54,7 @@ class ApplicationTest {
                 "tax_vat:235.60; inv_006:3199.99; payment_03:3214.00; consulting:3250.00; exp_marketing:450.00; " +
                 "fee_bank:415.20; exp_office:567.89; adjustment_01:523.45; exp_travel:632.00; misc_01:678.10; " +
                 "payment_02:721.15; refund_02:875.50; insurance:912.00"
-        val response = client.post("$BASE_PATH_$BENFORDS_ANALYSIS_PATH") {
+        val response = client.post("$BASE_PATH_$V1_PATH_$BENFORDS_ANALYSIS_PATH") {
             contentType(ContentType.Application.Json)
             setBody("""{"data": "$testData", "significanceLevel": 0.05}""")
         }
@@ -68,7 +69,7 @@ class ApplicationTest {
     @Test
     fun `should return 415 for unsupported content type`() = testApplication {
         application { module() }
-        val response = client.post("$BASE_PATH_$BENFORDS_ANALYSIS_PATH") {
+        val response = client.post("$BASE_PATH_$V1_PATH_$BENFORDS_ANALYSIS_PATH") {
             contentType(ContentType.Text.Plain)
             setBody("raw text")
         }
@@ -78,7 +79,7 @@ class ApplicationTest {
     @Test
     fun `should return 400 for malformed input`() = testApplication {
         application { module() }
-        val response = client.post("$BASE_PATH_$BENFORDS_ANALYSIS_PATH") {
+        val response = client.post("$BASE_PATH_$V1_PATH_$BENFORDS_ANALYSIS_PATH") {
             contentType(ContentType.Application.Json)
             setBody("""{"data": "a:900; b:950; c:925; d:975; invalid format", "significanceLevel": 0.05}""")
         }
