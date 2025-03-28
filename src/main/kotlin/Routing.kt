@@ -1,8 +1,7 @@
 package com.example
 
-import com.example.exceptions.AccountsValidatorException
+import com.example.exceptions.BenfordAnalysisException
 import com.example.exceptions.InvalidContentTypeException
-import com.example.exceptions.InvalidInputException
 import com.example.features.accounting.service.BenfordsAnalysisService
 import com.example.features.accounting.model.BenfordRequest
 import com.example.util.Constants.BASE_PATH_
@@ -31,13 +30,9 @@ fun Application.configureRouting() {
                 }
                 val request = call.receive<BenfordRequest>()
 
-                // Validate key-value pair format
-                val pairs = request.data.split(";")
-                if (!pairs.any { ":" in it }) {
-                    throw InvalidInputException("Data must be in 'key:value;' format")
-                }
 
-                val result = service.analyzeAccountingDataByBenfordsLaw(request.data, request.significanceLevel)
+
+                val result = service.analyzeDataByBenfordsLaw(request.data, request.significanceLevel)
                 call.respond(result)
             } catch (ex: IllegalStateException) {
                 log.error("Error : " + ex.message);
@@ -47,7 +42,7 @@ fun Application.configureRouting() {
                 log.error("Error : " + ex.message);
                 call.respond(HttpStatusCode.BadRequest, "Invalid JSON format")
 
-            } catch (ex: AccountsValidatorException) {
+            } catch (ex: BenfordAnalysisException) {
                 log.error("Error : " + ex.printStackTrace());
                 call.respond(ex.httpStatusCode, ex.userMessage)
 

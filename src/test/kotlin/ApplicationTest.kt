@@ -80,7 +80,7 @@ class ApplicationTest {
         application { module() }
         val response = client.post("$BASE_PATH_$BENFORDS_ANALYSIS_PATH") {
             contentType(ContentType.Application.Json)
-            setBody("""{"data": "invalid format", "significanceLevel": 0.05}""")
+            setBody("""{"data": "a:900; b:950; c:925; d:975; invalid format", "significanceLevel": 0.05}""")
         }
         assertEquals(HttpStatusCode.BadRequest, response.status)
     }

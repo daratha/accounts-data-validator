@@ -7,7 +7,7 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 
 class BenfordsAnalysisService {
-    fun analyzeAccountingDataByBenfordsLaw(accountsData: String, significanceLevel: Double): BenfordResult {
+    fun analyzeDataByBenfordsLaw(accountsData: String, significanceLevel: Double): BenfordResult {
         if (accountsData.isEmpty()) {
             throw InvalidInputException("Data cannot be empty")
         }
@@ -63,7 +63,17 @@ class BenfordsAnalysisService {
 
     private fun parseAndCountLeadingDigits(accountsData: String, digitsCounter: IntArray): Double {
         accountsData.split(";\\s*".toRegex())
-            .map { it.substringAfter(":").trim() }
+            .map { pair ->
+                // Validate each pair before processing
+                if (!pair.contains(":")) {
+                    throw InvalidInputException("Invalid data format in pair: '$pair'. Expected 'key:value'")
+                }
+                val valuePart = pair.substringAfter(":").trim()
+                if (valuePart.isEmpty()) {
+                    throw InvalidInputException("Empty value in pair: '$pair'")
+                }
+                valuePart
+            }
             .filter { it.isNotEmpty() }
             .forEach { value ->
                 value.firstOrNull { c -> c.isDigit() && c != '0' }?.let { firstDigit ->
