@@ -3,8 +3,10 @@ package com.example
 import com.example.exceptions.AccountsValidatorException
 import com.example.exceptions.InvalidContentTypeException
 import com.example.exceptions.InvalidInputException
-import com.example.features.accounting.domain.AccountingServiceImpl
+import com.example.features.accounting.service.BenfordsAnalysisService
 import com.example.features.accounting.model.BenfordRequest
+import com.example.util.Constants.BASE_PATH_
+import com.example.util.Constants.BENFORDS_ANALYSIS_PATH
 import io.ktor.http.*
 import io.ktor.serialization.*
 import io.ktor.server.application.*
@@ -12,11 +14,16 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-private val service = AccountingServiceImpl()
+//val service by inject<BenfordsAnalysisService>()
+private val service = BenfordsAnalysisService()
+
 
 fun Application.configureRouting() {
     routing {
-        post("/v1/accounts/benfords-validation") {
+        get ("$BASE_PATH_") {
+            call.respondText("Hello, world!")
+        }
+        post("$BASE_PATH_$BENFORDS_ANALYSIS_PATH") {
 
             try {
                 if (!call.request.isJsonContentType()) {
