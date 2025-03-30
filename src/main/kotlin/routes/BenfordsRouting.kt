@@ -21,6 +21,7 @@ class BenfordsRoute {
     fun configureRoutes(application: Application) {
         application.routing {
             post("$BASE_PATH_$V1_PATH_$BENFORDS_ANALYSIS_PATH") {
+                val LOGGER = call.application.environment.log
                 try {
                     if (!call.request.isJsonContentType()) {
                         throw InvalidContentTypeException()
@@ -28,20 +29,17 @@ class BenfordsRoute {
                     val request = call.receive<BenfordRequest>()
                     val result = service.analyzeDataByBenfordsLaw(request.data, request.significanceLevel)
                     call.respond(result)
-                } catch (ex: IllegalStateException) {
-//                    log.error("Error : " + ex.message);
-                    call.respond(HttpStatusCode.BadRequest, "Invalid Request")
 
                 } catch (ex: JsonConvertException) {
-//                    log.error("Error : " + ex.message);
+                    LOGGER.error("Error : " + ex.message);
                     call.respond(HttpStatusCode.BadRequest, "Invalid JSON format")
 
                 } catch (ex: BenfordAnalysisException) {
-//                    log.error("Error : " + ex.printStackTrace());
+                    LOGGER.error("Error : " + ex.printStackTrace());
                     call.respond(ex.httpStatusCode, ex.userMessage)
 
                 } catch (ex: Exception) {
-//                    log.error("Error : " + ex.printStackTrace());
+                    LOGGER.error("Error : " + ex.printStackTrace());
                     call.respond(HttpStatusCode.InternalServerError, "Internal Server Error")
                 }
             }

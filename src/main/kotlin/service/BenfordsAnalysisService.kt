@@ -1,6 +1,7 @@
 package com.example.service
 
 import com.example.exceptions.InvalidInputException
+import com.example.exceptions.StatisticalCalculationException
 import com.example.model.BenfordResult
 import org.apache.commons.math3.distribution.ChiSquaredDistribution
 import java.math.BigDecimal
@@ -8,9 +9,7 @@ import java.math.RoundingMode
 
 class BenfordsAnalysisService {
     fun analyzeDataByBenfordsLaw(accountsData: String, significanceLevel: Double): BenfordResult {
-        if (accountsData.isEmpty()) {
-            throw InvalidInputException("Data cannot be empty")
-        }
+        validateInputs(accountsData, significanceLevel)
         val digitsCounter = IntArray(9)
         val totalDigitCount = parseAndCountLeadingDigits(accountsData, digitsCounter)
 
@@ -29,18 +28,37 @@ class BenfordsAnalysisService {
         )
     }
 
+    private fun validateInputs(accountsData: String, significanceLevel: Double) {
+        if (accountsData.isEmpty()) {
+            throw InvalidInputException("Data cannot be empty")
+        }
+        if (significanceLevel < 0.01 || significanceLevel > 0.1) {
+            throw InvalidInputException(
+                "Significance level must be between 0.01 and 0.1 (inclusive)"
+            )
+        }
+    }
+
     private fun calculateCriticalValue(significanceLevel: Double): Double {
-        val degreesOfFreedom = 8
-        val criticalValue = ChiSquaredDistribution(degreesOfFreedom.toDouble())
-            .inverseCumulativeProbability(1 - significanceLevel)
-        return BigDecimal(criticalValue).setScale(2, RoundingMode.HALF_UP).toDouble()
+        try {
+            val degreesOfFreedom = 8
+            val criticalValue = ChiSquaredDistribution(degreesOfFreedom.toDouble())
+                .inverseCumulativeProbability(1 - significanceLevel)
+            return BigDecimal(criticalValue).setScale(2, RoundingMode.HALF_UP).toDouble()
+        } catch (e: Exception) {
+            throw StatisticalCalculationException()
+        }
     }
 
     private fun calculateChiSquareStatistic(digitsCounter: IntArray, total: Double): Double {
-        val chiSquare = (1..9).sumOf { digit ->
-            val observed = digitsCounter[digit - 1].toDouble()
-            val expected = Math.log10(1.0 + 1.0 / digit) * total
-            Math.pow(observed - expected, 2.0) / expected
+        val chiSquare = try {
+            (1..9).sumOf { digit ->
+                val observed = digitsCounter[digit - 1].toDouble()
+                val expected = Math.log10(1.0 + 1.0 / digit) * total
+                Math.pow(observed - expected, 2.0) / expected
+            }
+        } catch (e: Exception) {
+            throw StatisticalCalculationException()
         }
         return BigDecimal(chiSquare).setScale(2, RoundingMode.HALF_UP).toDouble()
     }

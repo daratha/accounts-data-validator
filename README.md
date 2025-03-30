@@ -2,6 +2,17 @@
 
 
 ## Features
+This is a tool to analyse a dataset based on the Benford's Law. 
+Provides a Rest API to send the data. The data should be sent as a string consist of key value pairs. <br><br>
+Accounting Data: <br>
+When we send accounts data we have to rearrange the data from accounts according to the string format provided below.
+
+Result:<br>
+The result consist of following information,
+observedDistribution - observed distribution of the digits and the percentage of occurrence in the dataset
+expectedDistribution - expected distribution of the digits if the data is in compliance with the Benford's Law
+chiSquareStatistic - 
+isBenfordCompliant -
 
 <br>
 <br>
@@ -133,3 +144,8 @@ Response:
    "isBenfordCompliant":false
 }
 ```
+<br><br><br>
+
+
+
+## Technical Explanation
