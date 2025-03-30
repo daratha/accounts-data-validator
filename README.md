@@ -169,7 +169,10 @@ Response:
 - Custom exceptions (`InvalidInputException`, `StatisticalCalculationException`).
 - HTTP status codes (400 Bad Request, 415 Unsupported Media Type).
 <br>
+
+
 ### Best Practices
+
 **Separation of Concerns**
 - Router (HTTP layer) vs. Service (business logic) vs. Model (data).
 
@@ -212,18 +215,20 @@ Response:
 
 ### 2. Performance Optimizations
 - Stream processing for large datasets (>1GB)
+- Multipart file upload endpoint
 
 
 ### 3. API Enhancements
 - Support CSV/Excel file uploads
 
 
-### 4. Monitoring & Observability
+### 4. Documentation
+- Swagger/OpenAPI documentation endpoint
+
+
+### 5. Monitoring & Observability
 - Prometheus metrics endpoint (/metrics)
 
 
-### 5. Security
+### 6. Security
 - JWT authentication (optional)
-
-### 6. Documentation
-- Swagger/OpenAPI documentation endpoint
