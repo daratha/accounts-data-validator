@@ -13,13 +13,16 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class BenfordsRoute {
+class BenfordsRoute : KoinComponent {
 
-    val service = BenfordsAnalysisService()
+    val service: BenfordsAnalysisService by inject()
 
     fun configureRoutes(application: Application) {
         application.routing {
+            //  /api/v1/analysis/benfords
             post("$BASE_PATH_$V1_PATH_$BENFORDS_ANALYSIS_PATH") {
                 val LOGGER = call.application.environment.log
                 try {
@@ -29,9 +32,8 @@ class BenfordsRoute {
                     val request = call.receive<BenfordRequest>()
                     val result = service.analyzeDataByBenfordsLaw(request.data, request.significanceLevel)
                     call.respond(result)
-
                 } catch (ex: JsonConvertException) {
-                    LOGGER.error("Error : " + ex.message);
+                    LOGGER.error("Error : " + ex.message)
                     call.respond(HttpStatusCode.BadRequest, "Invalid JSON format")
 
                 } catch (ex: BenfordAnalysisException) {
