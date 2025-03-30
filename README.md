@@ -193,3 +193,29 @@ Response:
 ## Libraries
 - **`org.apache.commons:commons-math3`**  
   Used for statistical calculations (chi-square distribution and inverse CDF) in Benford's Law validation.
+
+<br><br>
+
+## Future Improvements
+
+### 1. Rate Limiting
+- Implement API rate limiting (e.g., 100 requests/minute per IP)
+- Configurable tiers for different user types
+
+### 2. Performance Optimizations
+- Stream processing for large datasets (>1GB)
+
+
+### 3. API Enhancements
+- Support CSV/Excel file uploads
+
+
+### 4. Monitoring & Observability
+- Prometheus metrics endpoint (/metrics)
+
+
+### 5. Security
+- JWT authentication (optional)
+
+### 6. Documentation
+- Swagger/OpenAPI documentation endpoint
