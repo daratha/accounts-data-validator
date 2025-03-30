@@ -2,6 +2,16 @@
 
 
 ## Features
+A Ktor-based REST API to validate if accounting datasets follow Benford’s Law statistically. <br><br>
+Accounting Data: <br>
+When we send accounts data we have to rearrange the data from accounts according to the string format provided below.
+
+Result:<br>
+The result consist of following information,
+observedDistribution - observed distribution of the digits and the percentage of occurrence in the dataset
+expectedDistribution - expected distribution of the digits if the data is in compliance with the Benford's Law
+chiSquareStatistic - 
+isBenfordCompliant -
 
 <br>
 <br>
@@ -133,3 +143,53 @@ Response:
    "isBenfordCompliant":false
 }
 ```
+<br><br><br>
+
+
+
+## Technical Details 
+<br>
+
+### Core Functionality
+**Input Validation**
+- Checks for `key:value;` format in the input string.
+- Validates numeric values and significance level range (0.01 to 0.1).
+
+**Statistical Analysis**
+- Calculates observed vs. expected digit frequencies (digits 1–9).
+- Performs a chi-square (χ²) test with 8 degrees of freedom (df = 9 - 1).
+- Returns `isBenfordCompliant: Boolean` based on the test result.
+
+**Error Handling**
+- Custom exceptions (`InvalidInputException`, `StatisticalCalculationException`).
+- HTTP status codes (400 Bad Request, 415 Unsupported Media Type).
+
+## Best Practices
+**Separation of Concerns**
+- Router (HTTP layer) vs. Service (business logic) vs. Model (data).
+
+**Dependency Injection**
+- Koin framework for dependency management.
+- `by inject<T>()` for lazy service initialization.
+
+**Immutable Data**
+- Uses `data class` for responses (e.g., `BenfordResult`).
+
+**Input Sanitization**
+- Rejects malformed data (e.g., missing `:` or non-numeric values).
+
+**CI/CD**
+- GitHub Actions for automated testing on every push.
+
+## Tech Stack
+| Category       | Tools/Libraries Used |  
+|----------------|----------------------|  
+| Language       | Kotlin (JVM 17+)     |  
+| Framework      | Ktor (Netty engine)  |  
+| Testing        | JUnit 5              |  
+| CI/CD          | GitHub Actions       |  
+| Logging        | Logback              |  
+
+## Libraries
+- **`org.apache.commons:commons-math3`**  
+  Used for statistical calculations (chi-square distribution and inverse CDF) in Benford's Law validation.

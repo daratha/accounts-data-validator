@@ -5,6 +5,7 @@ import com.example.service.BenfordsAnalysisService
 import io.ktor.http.*
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -46,6 +47,28 @@ class BenfordsAnalysisServiceTest {
             service.analyzeDataByBenfordsLaw(emptyData, significanceLevel)
         }
         assertEquals(HttpStatusCode.BadRequest, exception.httpStatusCode)
-        assertEquals("Malformed input data: Data cannot be empty", exception.message)
+        assertEquals("Invalid input data: Data cannot be empty", exception.message)
+    }
+
+    @Test
+    fun `should reject significance level below range`() {
+        assertThrows<InvalidInputException> {
+            service.analyzeDataByBenfordsLaw("a:123", 0.005)
+        }
+    }
+
+    @Test
+    fun `should reject significance level above range`() {
+        assertThrows<InvalidInputException> {
+            service.analyzeDataByBenfordsLaw("a:123", 0.2)
+        }
+    }
+
+    @Test
+    fun `should accept boundary values`() {
+        assertDoesNotThrow {
+            service.analyzeDataByBenfordsLaw("a:123", 0.01)
+            service.analyzeDataByBenfordsLaw("a:123", 0.1)
+        }
     }
 }
