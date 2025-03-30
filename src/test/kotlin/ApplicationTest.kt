@@ -11,6 +11,7 @@ import io.ktor.server.testing.*
 import kotlinx.serialization.json.Json
 import org.koin.core.context.GlobalContext.stopKoin
 import org.koin.test.KoinTest
+import kotlin.system.measureTimeMillis
 import kotlin.test.*
 
 class ApplicationTest : KoinTest {
@@ -95,6 +96,26 @@ class ApplicationTest : KoinTest {
             setBody("""{"data": "a:900; b:950; c:925; d:975; invalid format", "significanceLevel": 0.05}""")
         }
         assertEquals(HttpStatusCode.BadRequest, response.status)
+        stopKoin()
+    }
+
+    @Test
+    fun `should process 100k entries under 2 seconds`() = testApplication {
+        application { module() }
+        val largeData = (1..100000).joinToString(";") { "inv_00$it:${it * it}" }
+
+        val time = measureTimeMillis {
+            val response = client.post("$BASE_PATH_$V1_PATH_$BENFORDS_ANALYSIS_PATH") {
+                contentType(ContentType.Application.Json)
+                setBody("""{"data": "$largeData", "significanceLevel": 0.05}""")
+            }
+            assertEquals(HttpStatusCode.OK, response.status)
+            val result = json.decodeFromString<BenfordResult>(response.bodyAsText())
+            assertTrue(result.observedDistribution.isNotEmpty())
+            assertTrue(result.expectedDistribution.isNotEmpty())
+            assertNotNull(result.chiSquareStatistic)
+        }
+        assertTrue(time < 2000)  // 2-second timeout
         stopKoin()
     }
 

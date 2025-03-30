@@ -9,9 +9,14 @@ When we send accounts data we have to rearrange the data from accounts according
 Result:<br>
 The result consist of following information,
 observedDistribution - observed distribution of the digits and the percentage of occurrence in the dataset
+<br>
 expectedDistribution - expected distribution of the digits if the data is in compliance with the Benford's Law
-chiSquareStatistic - 
-isBenfordCompliant -
+<br>
+chiSquareStatistic
+<br>
+criticalValue
+<br>
+isBenfordCompliant - true/false
 
 <br>
 <br>
@@ -163,8 +168,11 @@ Response:
 **Error Handling**
 - Custom exceptions (`InvalidInputException`, `StatisticalCalculationException`).
 - HTTP status codes (400 Bad Request, 415 Unsupported Media Type).
+<br>
 
-## Best Practices
+
+### Best Practices
+
 **Separation of Concerns**
 - Router (HTTP layer) vs. Service (business logic) vs. Model (data).
 
@@ -181,7 +189,9 @@ Response:
 **CI/CD**
 - GitHub Actions for automated testing on every push.
 
-## Tech Stack
+<br>
+
+### Tech Stack
 | Category       | Tools/Libraries Used |  
 |----------------|----------------------|  
 | Language       | Kotlin (JVM 17+)     |  
@@ -189,7 +199,36 @@ Response:
 | Testing        | JUnit 5              |  
 | CI/CD          | GitHub Actions       |  
 | Logging        | Logback              |  
+<br>
 
-## Libraries
+### Libraries
 - **`org.apache.commons:commons-math3`**  
   Used for statistical calculations (chi-square distribution and inverse CDF) in Benford's Law validation.
+
+<br><br><br>
+
+## Future Improvements
+
+### 1. Rate Limiting
+- Implement API rate limiting (e.g., 100 requests/minute per IP)
+- Configurable tiers for different user types
+
+### 2. Performance Optimizations
+- Stream processing for large datasets (>1GB)
+- Multipart file upload endpoint for large datasets
+
+
+### 3. API Enhancements
+- Support CSV/Excel file uploads
+
+
+### 4. Documentation
+- Swagger/OpenAPI documentation endpoint
+
+
+### 5. Monitoring & Observability
+- Prometheus metrics endpoint (/metrics)
+
+
+### 6. Security
+- JWT authentication (optional)

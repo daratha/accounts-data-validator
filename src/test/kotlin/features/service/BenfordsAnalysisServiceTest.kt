@@ -1,4 +1,4 @@
-package features.accounting.domain
+package com.example.features.service
 
 import com.example.exceptions.InvalidInputException
 import com.example.service.BenfordsAnalysisService
