@@ -218,7 +218,7 @@ Response:
 - Multipart file upload endpoint for large datasets
 
 
-### 3. API Enhancements
+### 3. Feature Enhancements
 - Support CSV/Excel file uploads
 
 
@@ -231,4 +231,4 @@ Response:
 
 
 ### 6. Security
-- JWT authentication (optional)
+- JWT authentication
