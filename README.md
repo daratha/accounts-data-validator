@@ -151,6 +151,15 @@ Response:
 <br><br><br>
 
 
+### Large Datasets
+Large datasets available in src/test/resources folder
+
+
+```
+curl -H "Content-Type: application/json"  -X POST http://0.0.0.0:8080/api/v1/analysis/benfords -d@src/test/resources/1000_dataset.json
+```
+
+<br><br>
 
 ## Technical Details 
 <br>
